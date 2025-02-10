@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
 /* Box sizing rules */
 *,
 *::before,
@@ -28,6 +30,7 @@ ol[role='list'] {
 body {
     min-height: 100vh;
     line-height: 1.5;
+    font-family: 'Roboto', sans-serif;
 }
 
 /* Set shorter line heights on headings and interactive elements */
@@ -74,4 +77,67 @@ textarea:not([rows]) {
 
 /* End CSS Reset */
 
+:root {
+    --sidebar-colour: #2b2f4e;
+}
 
+body {
+    margin: 0;
+}
+
+main {
+    height: 100vh;
+    display: flex;
+}
+
+.sidebar {
+    background-color: #2b2f4e;
+    color: #fff;
+    width: 20rem;
+    /* padding: 1em; */
+    height: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sidebar h2 {
+    padding: 1em;
+}
+
+.main-content {
+    margin-left: 2em;
+    padding: 1em;
+    flex: 1;
+}
+
+.project-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.project-content button {
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    padding: 1em;
+}
+
+.add-project {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.2em;
+    font-weight: 900;
+    padding: 1em 0;
+    background-color: var(--sidebar-colour);
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    color: white;
+}
+
+.add-project img {
+    width: 2em;
+}
