@@ -83,11 +83,14 @@ textarea:not([rows]) {
 
 body {
     margin: 0;
+    /* overflow-y: hidden; */
+    /* height: 100vh; */
 }
 
 main {
     height: 100vh;
     display: flex;
+    /* overflow-y: hidden; */
 }
 
 .sidebar {
@@ -96,7 +99,6 @@ main {
     width: 20rem;
     /* padding: 1em; */
     height: 100%;
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -110,6 +112,7 @@ main {
     margin-left: 2em;
     padding: 1em;
     flex: 1;
+    /* height: 100vh; */
 }
 
 .main-header {
@@ -118,7 +121,7 @@ main {
     align-items: center;
 }
 
-.add-todo {
+.add-todo-button {
     display: flex;
     justify-content: center;
     background-color: white;
@@ -135,14 +138,26 @@ main {
     color: black;
 }
 
-.add-todo img {
+.add-todo-button img {
     color: black;
     width: 2em;
 }
 
 .project-content {
     display: flex;
+    flex: 1;
+    /* justify-content: space-between; */
     flex-direction: column;
+    overflow: hidden;
+    /* height: 100vh; */
+}
+
+.all-projects {
+    display: flex;
+    flex-direction: column;
+    /* flex: 1; */
+    /* height: 100vh; */
+    overflow-y: auto;
 }
 
 .project-content button {
@@ -152,7 +167,7 @@ main {
     padding: 1em;
 }
 
-.add-project {
+.add-project-button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -166,7 +181,31 @@ main {
     color: white;
 }
 
-.add-project img {
+.project-button-container {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+}
+
+.project-button {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* .delete-proje */
+/* .delete-project-button {
+    border: 2px solid black;
+    padding: 5px;
+    font-size: 12px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+} */
+
+.add-project-button img {
     width: 2em;
 }
 
@@ -181,18 +220,19 @@ input[type="checkbox"] {
     margin-left: 1em;
 }
 
-input[type="text"] {
+.todo-input {
     border: none;
     outline: none;
     flex: 1;
     padding: 0;
-    margin: 0;
+    margin: 0 1em;
     background: none;
 }
 
 /* dummy todo list item  */
 .item-1 {
     display: flex;
+    flex: 1;
     justify-content: space-between;
     align-items: center;
     background-color: rgb(236, 236, 236);
@@ -208,4 +248,70 @@ input[type="text"] {
 
 .delete-button {
     margin-right: 2em;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+
+.modal-content {
+    position: relative;
+    background-color: white;
+    width: 80%;
+    max-width: 500px;
+    margin: 15% auto;
+    padding: 20px;
+}
+
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+label {
+    margin-top: 10px;
+}
+
+#details {
+    padding: 8px;
+    margin: 0.5em 1em 0, 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button[type="submit"] {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #45a049;
 }
