@@ -210,8 +210,10 @@ main {
 }
 
 .todo-list {
-    /* padding: 1.5em; */
-    margin: 2em 0;
+    padding-top: 2.5em;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
 }
 
 input[type="checkbox"] {
@@ -230,7 +232,7 @@ input[type="checkbox"] {
 }
 
 /* dummy todo list item  */
-.item-1 {
+.todo-item {
     display: flex;
     flex: 1;
     justify-content: space-between;
@@ -242,7 +244,7 @@ input[type="checkbox"] {
 
 }
 
-.item-1 p {
+.todo-item p {
     margin: 0 2em;
 }
 

@@ -1,9 +1,9 @@
 // src/index.js
 import "./styles.css";
 import createElement from "./utils.js";
-import { Projects, Project } from "./objects.js";
+import { Projects, Project, Todo } from "./objects.js";
 
-const todoButtonListenerAdded = false;
+let currentProjectIndex = null;
 
 function renderProjectList() {
   const projectList = projects.listProjects();
@@ -16,7 +16,7 @@ function renderProjectList() {
       projectSidebar,
       "project-button-container"
     );
-    projectButtonContainer.setAttribute("data-project-index", `${index}`); // Set the data attribute on the container
+    projectButtonContainer.setAttribute("data-project-index", `${index}`);
     const projectButton = createElement(
       "button",
       project.name,
@@ -33,78 +33,79 @@ function renderProjectList() {
 
   document.querySelectorAll(".project-button").forEach((button) => {
     button.addEventListener("click", (e) => {
-      console.log("Project Clicked!");
       const parentElement = e.target.parentElement;
       const projectIndex = parseInt(
         parentElement.getAttribute("data-project-index")
       );
-
-      const todoList = document.querySelector(".todo-list");
-      todoList.textContent = "";
-      addTodoButtonListener(projectIndex);
+      currentProjectIndex = projectIndex;
+      renderTodoList(projectIndex);
+      addTodoButtonListener();
     });
   });
 
-  // Add event listeners to delete buttons
   addDeleteButtonListeners();
+
+  if (projectList.length > 0 && currentProjectIndex === null) {
+    currentProjectIndex = 0;
+    renderTodoList(currentProjectIndex);
+    addTodoButtonListener();
+  }
 }
 
 function addDeleteButtonListeners() {
   document.querySelectorAll(".delete-project-button").forEach((button) => {
     button.addEventListener("click", (e) => {
-      console.log("Delete Clicked!");
       const parentElement = e.target.parentElement;
       const projectIndex = parseInt(
         parentElement.getAttribute("data-project-index")
       );
-      console.log(`Project index: ${projectIndex}`);
-      // Remove the project from the projects list
       projects.removeProject(projectIndex);
-      // Re-render the project list to update indices
       renderProjectList();
+      document.querySelector(".todo-list").textContent = "";
     });
   });
 }
 
-function addTodoButtonListener(projectIndex) {
+function addTodoButtonListener() {
   const modal = document.querySelector(".modal");
   const addTodoButton = document.querySelector(".add-todo-button");
   const closeModalButton = document.querySelector(".close-btn");
   const modalSubmit = document.querySelector(`button[type="submit"]`);
 
-  if (!todoButtonListenerAdded) {
-    addTodoButton.addEventListener("click", () => {
-      modal.style.display = "block";
-    });
+  addTodoButton.onclick = () => {
+    modal.style.display = "block";
+  };
 
-    closeModalButton.addEventListener("click", () => {
+  closeModalButton.onclick = () => {
+    modal.style.display = "none";
+  };
+
+  window.onclick = (e) => {
+    if (e.target === modal) {
       modal.style.display = "none";
-    });
+    }
+  };
 
-    window.addEventListener("click", (e) => {
-      if (e.target === modal) {
-        modal.style.display = "none"; // This hides the modal when clicking outside of the modal content
-      }
+  modalSubmit.onclick = (e) => {
+    e.preventDefault();
+    const details = document.querySelector("#details").value;
+    const deadline = document.querySelector("#deadline").value;
+    projects.listProjects()[currentProjectIndex].addTodo({
+      description: details,
+      priority: "low",
+      date: deadline,
     });
-
-    modalSubmit.addEventListener("click", (e) => {
-      e.preventDefault();
-      const details = document.querySelector("#details").value;
-      const deadline = document.querySelector("#deadline").value;
-      projects.listProjects()[projectIndex].addTodo();
-      console.log("HUUUH");
-      modal.style.display = "none";
-      renderTodoList(projectIndex);
-    });
-
-    todoButtonListenerAdded = true;
-  }
+    modal.style.display = "none";
+    renderTodoList(currentProjectIndex);
+    projects.saveProjects();
+  };
 }
 
 function renderTodoList(projectIndex) {
   const currentProject = projects.listProjects()[projectIndex];
+  if (!currentProject) return;
   const todoList = document.querySelector(".todo-list");
-  todoList.textContent = ""; // Clear the existing todo list
+  todoList.textContent = "";
   currentProject.todos.forEach((todo, index) => {
     const newTodo = createElement("div", null, todoList, "todo-item");
     newTodo.setAttribute("data-todo-index", index);
@@ -113,7 +114,7 @@ function renderTodoList(projectIndex) {
     checkBox.setAttribute("id", "activeCheckbox");
     newTodo.appendChild(checkBox);
     const todoText = document.createElement("span");
-    todoText.textContent = todo.name; // Assuming each todo has a 'name' property
+    todoText.textContent = todo.description;
     newTodo.appendChild(todoText);
     const changePriorityButton = createElement(
       "button",
@@ -121,7 +122,7 @@ function renderTodoList(projectIndex) {
       newTodo
     );
     const deadline = document.createElement("p");
-    deadline.textContent = todo.deadline; // Assuming each todo has a 'deadline' property
+    deadline.textContent = todo.date;
     newTodo.appendChild(deadline);
     const deleteButton = createElement(
       "button",
@@ -129,6 +130,11 @@ function renderTodoList(projectIndex) {
       newTodo,
       "delete-button"
     );
+    deleteButton.addEventListener("click", () => {
+      currentProject.removeTodo(index);
+      renderTodoList(projectIndex);
+      projects.saveProjects();
+    });
   });
 }
 
@@ -136,7 +142,10 @@ const projects = new Projects();
 
 renderProjectList();
 
-document.querySelector(".add-project-button").addEventListener("click", (e) => {
+document.querySelector(".add-project-button").addEventListener("click", () => {
   projects.addProject();
+  currentProjectIndex = projects.listProjects().length - 1; // Set to the newly added project
   renderProjectList();
+  renderTodoList(currentProjectIndex);
+  addTodoButtonListener();
 });

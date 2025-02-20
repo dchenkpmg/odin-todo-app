@@ -1,15 +1,20 @@
 class Todo {
-  constructor() {
-    this.active = true;
-    this.description = "";
-    this.priority = "low";
-    this.date = "19/19/1999";
+  constructor(
+    description = "",
+    priority = "low",
+    date = "19/19/1999",
+    active = true
+  ) {
+    this.id = Date.now(); // Unique identifier
+    this.active = active;
+    this.description = description;
+    this.priority = priority;
+    this.date = date;
   }
 
   setActive(active) {
     this.active = active;
   }
-  // set
 }
 
 class Project {
@@ -19,13 +24,18 @@ class Project {
     this.todos = [];
   }
 
-  addTodo() {
-    const todo = new Todo();
+  addTodo(todoData) {
+    const todo = new Todo(
+      todoData.description,
+      todoData.priority,
+      todoData.date,
+      todoData.active
+    );
     this.todos.push(todo);
   }
 
-  removeTodo(id) {
-    this.todos = this.todos.filter((todo) => todo.id !== id);
+  removeTodo(todoIndex) {
+    this.todos.splice(todoIndex, 1);
   }
 }
 
@@ -33,6 +43,7 @@ class Projects {
   constructor() {
     this.projects = this.loadProjects();
   }
+
   addProject() {
     const project = new Project(this.projects.length);
     this.projects.push(project);
@@ -64,7 +75,12 @@ class Projects {
         project.name = projectData.name;
         project.todos = projectData.todos.map(
           (todoData) =>
-            new Todo(todoData.description, todoData.priority, todoData.date)
+            new Todo(
+              todoData.description,
+              todoData.priority,
+              todoData.date,
+              todoData.active
+            )
         );
         return project;
       });
@@ -73,4 +89,4 @@ class Projects {
   }
 }
 
-export { Projects, Project };
+export { Projects, Project, Todo };
