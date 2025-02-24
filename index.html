@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>To-Do List</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<script defer src="main.js"></script></head>
+
+<body>
+    <main>
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h2>Submit Todo</h2>
+                <form id="modalForm">
+                    <label for="details">Details:</label>
+                    <input type="text" id="details" name="details">
+                    <label for="deadline">Deadline:</label>
+                    <input type="date" id="deadline" name="deadline" value="1999-12-12">
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+        <div id="projectModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h2>Add Project</h2>
+                <form id="projectModalForm">
+                    <label for="projectName">Project Name:</label>
+                    <input type="text" id="projectName" name="projectName">
+                    <button type="submit">Add Project</button>
+                </form>
+            </div>
+        </div>
+        <div class="sidebar">
+            <div class="project-content">
+                <h2>Projects</h2>
+                <div class="all-projects">
+                </div>
+            </div>
+            <button class="add-project-button"><img src="1ab8da4635ac355d28c3.svg" alt="Add Project">Add Project</button>
+        </div>
+        <div class="main-content">
+            <header class="main-header">
+                <h2>To-Do List</h2>
+                <button class="add-todo-button"><img src="f8cc317a8f517d9d33ea.svg" alt="Add Item">Add Item</button>
+            </header>
+            <div class="todo-list">
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
