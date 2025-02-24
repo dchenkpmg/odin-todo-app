@@ -1,7 +1,7 @@
-// src/index.js
 import "./styles.css";
 import createElement from "./utils.js";
 import { Projects, Project, Todo } from "./objects.js";
+import { format } from "date-fns";
 
 let currentProjectIndex = null;
 
@@ -29,10 +29,8 @@ function renderProjectList() {
       projectButtonContainer,
       "delete-project-button"
     );
-  });
 
-  document.querySelectorAll(".project-button").forEach((button) => {
-    button.addEventListener("click", (e) => {
+    projectButton.addEventListener("click", (e) => {
       const parentElement = e.target.parentElement;
       const projectIndex = parseInt(
         parentElement.getAttribute("data-project-index")
@@ -40,10 +38,14 @@ function renderProjectList() {
       currentProjectIndex = projectIndex;
       renderTodoList(projectIndex);
       addTodoButtonListener();
+
+      document.querySelectorAll(".project-button").forEach((btn) => {
+        btn.classList.remove("active");
+      });
+
+      projectButton.classList.add("active");
     });
   });
-
-  document.querySelectorAll(".project-button").addEventListener("")
 
   addDeleteButtonListeners();
 
@@ -78,10 +80,6 @@ function addTodoButtonListener() {
     modal.style.display = "block";
   };
 
-  addTodoButton.addEventListener("click", () => {
-    
-  })
-
   closeModalButton.onclick = () => {
     modal.style.display = "none";
   };
@@ -98,13 +96,47 @@ function addTodoButtonListener() {
     const deadline = document.querySelector("#deadline").value;
     projects.listProjects()[currentProjectIndex].addTodo({
       description: details,
-      priority: "low",
+      priority: "rgb(103, 190, 103)",
       date: deadline,
-      completed: false, // New property
+      completed: false,
     });
     modal.style.display = "none";
     renderTodoList(currentProjectIndex);
     projects.saveProjects();
+  };
+}
+
+function addProjectButtonListener() {
+  const projectModal = document.querySelector("#projectModal");
+  const addProjectButton = document.querySelector(".add-project-button");
+  const closeProjectModalButton = document.querySelector(".close-btn");
+  const projectModalSubmit = document.querySelector(
+    "#projectModalForm button[type='submit']"
+  );
+
+  addProjectButton.onclick = () => {
+    projectModal.style.display = "block";
+  };
+
+  closeProjectModalButton.onclick = () => {
+    projectModal.style.display = "none";
+  };
+
+  window.onclick = (e) => {
+    if (e.target === projectModal) {
+      projectModal.style.display = "none";
+    }
+  };
+
+  projectModalSubmit.onclick = (e) => {
+    e.preventDefault();
+    const projectName = document.querySelector("#projectName").value;
+    const project = new Project(projects.listProjects().length);
+    project.name = projectName;
+    projects.projects.push(project);
+    projects.saveProjects();
+    projectModal.style.display = "none";
+    renderProjectList();
   };
 }
 
@@ -131,7 +163,7 @@ function renderTodoList(projectIndex) {
       "priority-button"
     );
     const deadline = document.createElement("p");
-    deadline.textContent = todo.date;
+    deadline.textContent = format(new Date(todo.date), "dd/MM/yyyy");
     newTodo.appendChild(deadline);
     const deleteButton = createElement(
       "button",
@@ -144,31 +176,45 @@ function renderTodoList(projectIndex) {
       renderTodoList(projectIndex);
       projects.saveProjects();
     });
-    // Make the paragraph editable on click
+
     editableParagraph.addEventListener("click", () => {
       editableParagraph.setAttribute("contenteditable", "true");
       editableParagraph.focus();
     });
-    // Save the content when the user finishes editing (on blur event)
+
     editableParagraph.addEventListener("blur", () => {
       editableParagraph.removeAttribute("contenteditable");
       const content = editableParagraph.textContent;
-      currentProject.todos[index].description = content; // Update the Todo description
-      projects.saveProjects(); // Save the updated projects to localStorage
+      currentProject.todos[index].description = content;
     });
 
-    // Optional: Save the content when the user presses Enter (on keydown event)
     editableParagraph.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
-        event.preventDefault(); // Prevent inserting a newline
-        editableParagraph.blur(); // Trigger the blur event to save content
+        event.preventDefault();
+        editableParagraph.blur();
       }
     });
 
-    // Save the checkbox status when it changes
     checkBox.addEventListener("change", () => {
-      currentProject.todos[index].completed = checkBox.checked; // Update the Todo completed status
-      projects.saveProjects(); // Save the updated projects to localStorage
+      currentProject.todos[index].completed = checkBox.checked;
+      projects.saveProjects();
+    });
+
+    const colors = [
+      "rgb(103, 190, 103)",
+      "rgb(255, 165, 0)",
+      "rgb(255, 69, 0)",
+    ];
+    let currentColorIndex = colors.indexOf(todo.priority);
+
+    newTodo.style.borderLeftColor = todo.priority;
+
+    changePriorityButton.addEventListener("click", () => {
+      currentColorIndex = (currentColorIndex + 1) % colors.length;
+      const newColor = colors[currentColorIndex];
+      newTodo.style.borderLeftColor = newColor;
+      currentProject.todos[index].priority = newColor;
+      projects.saveProjects();
     });
   });
 }
@@ -176,11 +222,9 @@ function renderTodoList(projectIndex) {
 const projects = new Projects();
 
 renderProjectList();
+addProjectButtonListener();
 
 document.querySelector(".add-project-button").addEventListener("click", () => {
-  projects.addProject();
-  currentProjectIndex = projects.listProjects().length - 1; // Set to the newly added project
-  renderProjectList();
-  renderTodoList(currentProjectIndex);
-  addTodoButtonListener();
+  const projectModal = document.querySelector("#projectModal");
+  projectModal.style.display = "block";
 });

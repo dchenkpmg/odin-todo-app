@@ -1,22 +1,21 @@
 class Todo {
   constructor(
-    description = "",
-    priority = "low",
-    date = "19/19/1999",
+    description = "Edit description",
+    priority = "rgb(103, 190, 103)",
+    date = "00/00/0000",
     completed = false
   ) {
-    this.id = Date.now(); // Unique identifier
     this.description = description;
     this.priority = priority;
     this.date = date;
-    this.completed = completed; // New property
+    this.completed = completed;
   }
 }
 
 class Project {
   constructor(id) {
     this.id = id;
-    this.name = "Project";
+    this.name = "Double-click to edit title";
     this.todos = [];
   }
 
@@ -25,7 +24,7 @@ class Project {
       todoData.description,
       todoData.priority,
       todoData.date,
-      todoData.completed // New property
+      todoData.completed
     );
     this.todos.push(todo);
   }
@@ -75,7 +74,7 @@ class Projects {
               todoData.description,
               todoData.priority,
               todoData.date,
-              todoData.completed // New property
+              todoData.completed
             )
         );
         return project;
