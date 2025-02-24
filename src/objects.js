@@ -3,17 +3,13 @@ class Todo {
     description = "",
     priority = "low",
     date = "19/19/1999",
-    active = true
+    completed = false
   ) {
     this.id = Date.now(); // Unique identifier
-    this.active = active;
     this.description = description;
     this.priority = priority;
     this.date = date;
-  }
-
-  setActive(active) {
-    this.active = active;
+    this.completed = completed; // New property
   }
 }
 
@@ -29,7 +25,7 @@ class Project {
       todoData.description,
       todoData.priority,
       todoData.date,
-      todoData.active
+      todoData.completed // New property
     );
     this.todos.push(todo);
   }
@@ -79,7 +75,7 @@ class Projects {
               todoData.description,
               todoData.priority,
               todoData.date,
-              todoData.active
+              todoData.completed // New property
             )
         );
         return project;
